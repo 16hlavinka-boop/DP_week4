@@ -90,7 +90,16 @@ print(tokenize(text))
 
 # Your code here:
 # -----------------------------------------------
-word_frequencies = {word: tokenize(text).count(word) for word in set(tokenize(text))}  # Your code here
+def tokenize_ordered(string: str) -> list[str]:
+    for char in """!".-,?""":
+        string = string.replace(char, " ")
+    return string.lower().split()
+
+tokens = tokenize_ordered(text)   # all tokens, duplicates kept
+
+word_frequencies = {word: tokens.count(word) for word in set(tokens)}
+
+  
 
 # Expected output example: {'the': 2, 'quick': 1, ...}
 print(word_frequencies)
