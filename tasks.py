@@ -28,12 +28,17 @@ import numpy as np
 # -----------------------------------------------
 text = "The quick brown fox jumps over the lazy dog!"
 
+
 # Write a list comprehension to tokenize the text and remove punctuation
-tokens = _ # Your code here
+tokens = [word.strip('.,!?";') for word in text.split()] # Your code here
 
 # Expected output: ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']
 print(tokens)
 # -----------------------------------------------
+
+
+
+
 
 
 
@@ -45,10 +50,11 @@ print(tokens)
 # Your code here:
 # -----------------------------------------------
 def tokenize(string: str) -> list:
-    pass # Your code
+    return [word.strip('.,!?";').lower() for word in string.split()]    
 
 
 # -----------------------------------------------
+print(tokenize(text))  
 
 
 
@@ -74,7 +80,7 @@ def tokenize(string: str) -> list:
 
 # Your code here:
 # -----------------------------------------------
-word_frequencies = _ # Your code here
+word_frequencies = {word: tokenize(text).count(word) for word in set(tokenize(text))}
 
 # Expected output example: {'the': 2, 'quick': 1, ...}
 print(word_frequencies)
