@@ -60,7 +60,7 @@ def tokenize(string: str) -> list[str]:
         string = string.replace(char, " ")
 
     words = string.lower().split()
-    return np.sort(words).tolist()  
+    return np.unique(words).tolist()  
 
 
 # -----------------------------------------------
