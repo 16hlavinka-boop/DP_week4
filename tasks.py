@@ -1,3 +1,5 @@
+from string import punctuation
+
 import numpy as np
 
 # Follow the tasks below to practice basic Python concepts.
@@ -49,8 +51,16 @@ print(tokens)
 
 # Your code here:
 # -----------------------------------------------
-def tokenize(string: str) -> list:
-    return [word.strip('.,!?";').lower() for word in string.split()]    
+
+
+def tokenize(string: str) -> list[str]:
+    punctuation = """!".-,?"""
+
+    for char in punctuation:
+        string = string.replace(char, " ")
+
+    words = string.lower().split()
+    return np.sort(words).tolist()  
 
 
 # -----------------------------------------------
@@ -80,7 +90,7 @@ print(tokenize(text))
 
 # Your code here:
 # -----------------------------------------------
-word_frequencies = {word: tokenize(text).count(word) for word in set(tokenize(text))}
+word_frequencies = {word: tokenize(text).count(word) for word in set(tokenize(text))}  # Your code here
 
 # Expected output example: {'the': 2, 'quick': 1, ...}
 print(word_frequencies)
@@ -96,7 +106,8 @@ print(word_frequencies)
 # Your code here:
 # -----------------------------------------------
 def token_counts(string: str, k: int = 1) -> dict:
-    pass # Your code
+    tokens = tokenize(string)
+    return {word: tokenize(text).count(word) for word in set(tokenize(text)) if tokenize(text).count(word) > k}  # Your code here   
 
 # test:
 text_hist = {'the': 2, 'quick': 1, 'brown': 1, 'fox': 1, 'jumps': 1, 'over': 1, 'lazy': 1, 'dog': 1}
@@ -127,7 +138,15 @@ all(text_hist[key] == value for key, value in token_counts(text).items())
 
 # Your code here:
 # -----------------------------------------------
-token_to_id = _ # Your code here
+
+
+unique_tokens = list(dict.fromkeys(tokens))
+
+token_to_id = {token: idx for idx, token in enumerate(unique_tokens)}
+
+
+
+
 
 # Expected output: {'dog': 0, 'quick': 1, 'fox': 2, 'the': 3, 'over': 4, 'lazy': 5, 'brown': 6, 'jumps': 7}
 print(token_to_id)
@@ -135,11 +154,14 @@ print(token_to_id)
 
 
 
+
+
+
 # Task 6: Define a dictionary that reverses the maping in `token2int`
 #
 # Your code here:
 # -----------------------------------------------
-id_to_token = _ # Your code here
+id_to_token = {idx: token for token, idx in token_to_id.items()}
 
 # tests: 
 # test 1
@@ -160,8 +182,18 @@ assert all(id_to_token[token_to_id[key]]==key for key in token_to_id) and all(to
 # Your code here:
 # -----------------------------------------------
 def make_vocabulary_map(documents: list) -> tuple:
-    # Hint: use your tokenize function
-    pass # Your code
+    unique_tokens = []
+    seen = set()
+    for doc in documents:
+        for tok in tokenize(doc):
+            if tok not in seen:
+                seen.add(tok)
+                unique_tokens.append(tok)
+
+    token2int = {tok: idx for idx, tok in enumerate(unique_tokens)}
+    int2token = {idx: tok for tok, idx in token2int.items()}
+
+    return token2int, int2token
 
 # Test
 t2i, i2t = make_vocabulary_map([text])
@@ -180,8 +212,11 @@ all(i2t[t2i[tok]] == tok for tok in t2i) # should be True
 # Your code here:
 # -----------------------------------------------
 def tokenize_and_encode(documents: list) -> list:
-    # Hint: use your make_vocabulary_map and tokenize function
-    pass # Your code
+    token2int, int2token = make_vocabulary_map(documents)
+
+    encoded = [[token2int[tok] for tok in tokenize(doc)] for doc in documents]
+
+    return encoded, token2int, int2token
 
 # Test:
 enc, t2i, i2t = tokenize_and_encode([text, 'What a luck we had today!'])
@@ -207,7 +242,7 @@ enc, t2i, i2t = tokenize_and_encode([text, 'What a luck we had today!'])
 
 # Your code here:
 # -----------------------------------------------
-sigmoid = _ # Your code
+sigmoid = lambda x: 1 / (1 + np.exp(-x))
 
 # Test:
 np.all(sigmoid(np.log([1, 1/3, 1/7])) == np.array([1/2, 1/4, 1/8]))
